@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geosever Map</title>
+
+    <!-- Style Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+
+    <style>
+        #map {
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="alert alert-success text-center" role="alert">
+        <h3>Kabupaten Sleman</h3>
+    </div>
+    <div id="map"></div>
+
+    <script src = "https://code.jquery.com/jquery-3.6.0.min.js"></script>    
+    <script src = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    
+
+        <script>
+            // tampilan awal peta
+            var map = L.map("map").setView([-7.8, 110.37], 12);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 30,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+            /* Memanggil File GeoJSON Point 01*/
+                var wfsgeoserver1 = L.geoJson(null, {
+                pointToLayer: function (feature, latlng) {
+                    return L.marker(latlng, {
+                        /* icon: L.icon({
+                            iconUrl: "assets/img/marker/fas_rumahsakit_rujukan.png", //URL icon marker
+                            iconSize: [32, 32], //ukuran icon marker
+                            iconAnchor: [16, 32], //icon marker offset
+                            popupAnchor: [0, -32], //popup offset
+                            tooltipAnchor: [16, -20] //tooltip offset
+                        }) */
+                    });
+                },
+                onEachFeature: function (feature, layer) {
+                /* Variabel content untuk memanggil atribut dari data file geojson */
+                var content = "Kapanewon : " + feature.properties.kecamatan + "<br>" +
+                "Kabupaten : " + "Sleman" + "<br>" +
+                "Provinsi : " + "Daerah Istimewa Yogyakarta";
+                layer.on({
+                click: function (e) { //Fungsi ketika icon simbol di-klik
+                    wfsgeoserver1.bindPopup(content);
+                },
+                mouseover: function(e) {
+                    wfsgeoserver1.bindTooltip(feature.properties.kecamatan);
+                },
+                mouseout: function(e) {
+                    wfsgeoserver1.closePopup();
+                }
+                });
+                }
+            });
+
+            $.getJSON("wfsgeoserver1.php", function (data) {
+                wfsgeoserver1.addData(data);
+                map.addLayer(wfsgeoserver1);
+                map.fitBounds(wfsgeoserver1.getBounds());
+            });
+        </script>
+</body>
+</html>
