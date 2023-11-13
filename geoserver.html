@@ -1,5 +1,5 @@
 <head>
-    <title>9C PG-Web</title>
+    <title>9B PG-Web</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -79,9 +79,7 @@
             },
             onEachFeature: function (feature, layer) {
                 /* Variabel content untuk memanggil atribut dari data file geojson */
-                var content = "Kapanewon : " + feature.properties.kecamatan + "<br>" +
-                "Kabupaten : " + "Sleman" + "<br>" +
-                "Provinsi : " + "Daerah Istimewa Yogyakarta" + "<br>" + "Jumlah Penduduk : " + feature.properties.jumlah + "<br>";
+                var content = feature.geometry.coordinates;
                 layer.on({
                 click: function (e) { //Fungsi ketika icon simbol di-klik
                     wfsgeoserver1.bindPopup(content);
@@ -97,10 +95,10 @@
             });
 
 
-        $.getJSON("wfsgeoserver2.php", function (data) {
+        $.getJSON("wfsgeoserver1.php", function (data) {
             wfsgeoserver1.addData(data);
             map.addLayer(wfsgeoserver1);
-            // map.fitBounds(wfsgeoserver1.getBounds());
+            map.fitBounds(wfsgeoserver1.getBounds());
         });
         
 
